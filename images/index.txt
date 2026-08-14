@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ 寶可夢 16型人格 (MBTI) 終極測驗 ⚡</title>
+    <style>
+        :root {
+            --pk-yellow: #ffcb05;
+            --pk-blue: #3b4cca;
+            --pk-soft-red: #f48a8a;
+            --pk-dark: #2a2a2a;
+        }
+        
+        body {
+            font-family: 'PingFang HK', 'Helvetica Neue', Arial, sans-serif;
+            /* 🌲 直接讀取本機 images 資料夾內的 bg.png 底圖 */
+            background-image: url('images/bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* 🐮 左上角的「屯門牛落場」標籤 */
+        .top-left-title {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--pk-yellow);
+            text-shadow: 2px 2px 0px var(--pk-blue), -1px -1px 0px var(--pk-blue), 1px -1px 0px var(--pk-blue), -1px 1px 0px var(--pk-blue), 1px 1px 0px var(--pk-blue);
+            letter-spacing: 2px;
+            z-index: 10;
+        }
+
+        @media (max-width: 600px) {
+            .top-left-title {
+                position: fixed;
+                top: 15px;
+                left: 15px;
+                font-size: 18px;
+            }
+            body {
+                padding-top: 60px;
+            }
+        }
+
+        .container {
+            background-color: rgba(31, 33, 42, 0.92);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
+            border: 6px solid var(--pk-yellow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 { 
+            color: var(--pk-yellow); 
+            font-size: 26px;
+            margin-bottom: 25px; 
+            text-shadow: 2px 2px 0px var(--pk-blue);
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            background-color: var(--pk-soft-red);
+            color: white;
+            border: 3px solid var(--pk-dark);
+            padding: 14px 40px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            box-shadow: 0 6px 0px var(--pk-dark);
+        }
+        .btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 0px var(--pk-dark);
+            background-color: #f7a3a3;
+        }
+
+        .hidden { display: none; }
+
+        .hp-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #ccc;
+        }
+        .progress-bar {
+            flex-grow: 1;
+            height: 16px;
+            background-color: #333;
+            border-radius: 10px;
+            border: 2px solid var(--pk-yellow);
+            overflow: hidden;
+            padding: 1px;
+        }
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #51df51, #3fe03f);
+            width: 0%;
+            border-radius: 8px;
+            transition: width 0.3s;
+        }
+
+        .game-box {
+            background-color: #282b36;
+            border: 4px solid var(--pk-blue);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+        .question { font-size: 20px; font-weight: bold; line-height: 1.5; color: #fff;}
+
+        .options { display: flex; flex-direction: column; gap: 15px; }
+        .option-btn {
+            background-color: #2d313f;
+            border: 3px solid #444;
+            color: #fff;
+            padding: 16px 20px;
+            font-size: 16px;
+            border-radius: 15px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        .option-btn:hover { border-color: var(--pk-yellow); background-color: #383e52; transform: scale(1.02); }
+
+        .pokemon-img-container {
+            margin: 10px auto 20px;
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(255,203,5,0.15) 0%, transparent 70%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background-color: #111116;
+            border-radius: 20px;
+            border: 2px solid #333;
+        }
+        .pokemon-img {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            border: 2px solid var(--pk-dark);
+        }
+
+        .result-title { font-size: 26px; color: var(--pk-yellow); font-weight: bold; margin-bottom: 5px; }
+        .pokemon-mbti { font-size: 18px; color: #ff8800; font-weight: bold; margin-bottom: 20px;}
+        .pokemon-desc { text-align: left; line-height: 1.7; margin-bottom: 35px; font-size: 15px; background: #282b36; padding: 20px; border-radius: 12px; border-left: 5px solid var(--pk-yellow); color: #ddd;}
+    </style>
+</head>
+<body>
+
+<div class="top-left-title">屯門牛落場 🌾</div>
+
+<div class="container">
+    <div id="start-view">
+        <div style="font-size: 60px; margin-bottom: 10px;">🎒</div>
+        <h1>寶可夢 16型人格測驗</h1>
+        <p style="font-size: 16px; margin-bottom: 40px; color: #ccc; line-height: 1.6;">
+            訓練家，準備好踏上旅程了嗎？<br>回答 12 道情境題，召喚你的靈魂寶可夢！
+        </p>
+        <button class="btn" onclick="startQuiz()">進入冒險 ➔</button>
+    </div>
+
+    <div id="quiz-view" class="hidden">
+        <div class="hp-container">
+            <span>HP</span>
+            <div class="progress-bar"><div id="progress" class="progress"></div></div>
+            <span id="progress-text" style="font-size: 14px;">0/12</span>
+        </div>
+        <div class="game-box">
+            <div id="question" class="question">問題載入中...</div>
+        </div>
+        <div class="options">
+            <button class="option-btn" id="optA" onclick="selectOption('A')">選項 A</button>
+            <button class="option-btn" id="optB" onclick="selectOption('B')">選項 B</button>
+        </div>
+    </div>
+
+    <div id="result-view" class="hidden">
+        <h1 style="color: var(--pk-yellow); text-shadow: 2px 2px 0px rgba(0,0,0,0.5);">🛒 圖鑑登錄成功！</h1>
+        
+        <div class="pokemon-img-container">
+            <img id="pokemon-pic" class="pokemon-img" src="" alt="寶可夢圖片">
+        </div>
+
+        <div id="pokemon-type" class="type-badge" style="background-color: #aaa;">屬性</div>
+        <div class="result-title" id="pokemon-name">寶可夢名稱</div>
+        <div class="pokemon-mbti" id="mbti-type">MBTI 類型</div>
+        <div class="pokemon-desc" id="pokemon-desc">寶可夢描述</div>
+        <button class="btn" onclick="restartQuiz()">重啟冒險 ↻</button>
+    </div>
+</div>
+
+<script>
+const questions = [
+    { q: "在派對或社交聚會後，你的感覺通常是？", a: "精力充沛，還想繼續和朋友聊天", b: "精疲力竭，需要自己一個人靜靜充電", type: "EI", valA: "E", valB: "I" },
+    { q: "當你放假放鬆時，你更傾向於？", a: "約朋友出門逛街、聚餐或戶外活動", b: "待在家裡看劇、打電動或看書", type: "EI", valA: "E", valB: "I" },
+    { q: "在團隊討論中，你通常是？", a: "主動發言，邊講邊思考", b: "先聆聽大家的想法，想好了再說", type: "EI", valA: "E", valB: "I" },
+    
+    { q: "學習新東西時，你比較喜歡哪種方式？", a: "有具體的步驟、範例和實際操作", b: "理解大概念、原理和未來的可能性", type: "SN", valA: "S", valB: "N" },
+    { q: "朋友向你訴苦時，你通常會注意？", a: "事情發生的具體細節與事實", b: "字裡行間的情感隱喻與大局影響", type: "SN", valA: "S", valB: "N" },
+    { q: "你如何看待生活中的規律？", a: "喜歡明確、有條理且符合現實的常規", b: "容易對重複感到沉悶，更喜歡創新點子", type: "SN", valA: "S", valB: "N" },
+    
+    { q: "當朋友做錯事向你訴苦，你會先？", a: "理性分析問題，幫他找出解決方法", b: "先安慰他的情緒，站在他的立場同理他", type: "TF", valA: "T", valB: "F" },
+    { q: "做重大決定時，哪一個對你影響最大？", a: "邏輯推理與客觀事實是否合理", b: "這個決定是否符合內心價值觀與他人感受", type: "TF", valA: "T", valB: "F" },
+    { q: "你比較容易被哪種讚美打動？", a: "「你做這件事真的太聰明、太有效率了！」", b: "「你真的很善良、很貼心，有你真好！」", type: "TF", valA: "T", valB: "F" },
+    
+    { q: "準備出門旅遊前，你通常會？", a: "安排好詳細的行程表和交通時間", b: "只決定大方向，到時候看心情隨興決定", type: "JP", valA: "J", valB: "P" },
+    { q: "面對工作或學校的報告、作業，你習慣？", a: "提早規劃，按步就班在截止日前完成", b: "通常等到最後關頭，靠爆發力一氣成", type: "JP", valA: "J", valB: "P" },
+    { q: "如果原本計畫好的事情突然被取消，你會？", a: "感到有點焦慮或不適應，因為打亂了節奏", b: "覺得沒差，反正計劃趕不上變化，很適應", type: "JP", valA: "J", valB: "P" }
+];
+
+const pokemonDatabase = {
+    "ISTJ": { name: "鋼鎧鴉 (Corviknight)", type: "鋼 / 飛行", color: "#a1a1af", desc: "沉穩、可靠且紀律嚴明。像鋼鎧鴉一樣，你是最值得信賴的守護者，做事務實且恪守職責。" },
+    "ISFJ": { name: "吉利蛋 (Chansey)", type: "一般", color: "#aaaa77", desc: "溫柔、貼心且充滿奉獻精神。像吉利蛋一樣，你默默照顧著身邊的每一個人，是天生的療癒者。" },
+    "INFJ": { name: "超夢 (Mewtwo)", type: "超能力", color: "#ff5599", desc: "深邃、神秘且充滿洞察力。像超夢一樣，你擁有極高的精神世界，追求生命與存在的深層意義。" },
+    "INTJ": { name: "巨金怪 (Metagross)", type: "鋼 / 超能力", color: "#5b769e", desc: "冷靜、理智且具備強大的戰略思維。像巨金怪一樣，你擁有如超級電腦般的頭腦，凡事皆有完美佈局。" },
+    "ISTP": { name: "甲賀忍蛙 (Greninja)", type: "水 / 惡", color: "#3399ff", desc: "冷酷、靈活且行動力極強。像甲賀忍蛙一樣，你平時低調，但在關鍵時刻總能靠高超的技術與冷靜解決問題。" },
+    "ISFP": { name: "圖圖犬 (Smeargle)", type: "一般", color: "#aaaa77", desc: "藝術家性格，熱愛自由且感性。像圖圖犬一樣，你用自己獨特的色彩描繪世界，不喜歡被規則束縛。" },
+    "INFP": { name: "夢幻 (Mew)", type: "超能力", color: "#ff5599", desc: "純真、善良且富有想像力。像夢幻一樣，你內心深處保留著童真，總是抱持著理想主義去期待美好的世界。" },
+    "INTP": { name: "胡地 (Alakazam)", type: "超能力", color: "#ff5599", desc: "好奇心重、熱愛思考與邏輯分析。像胡地一樣，你的大腦永遠在運轉，試圖解開世界上所有的未知謎團。" },
+    "ESTP": { name: "炙焰咆哮虎 (Incineroar)", type: "火 / 惡", color: "#ff4422", desc: "充滿活力、喜歡挑戰且熱愛活在當下。像炙焰咆哮虎一樣，你是全場焦點，享受冒險與刺激的感官體驗。" },
+    "ESFP": { name: "皮卡丘 (Pikachu)", type: "電", color: "#ffcc33", desc: "熱情、活潑且自帶光芒。像皮卡丘一樣，你走到哪裡都能帶來歡樂，是天生的社交小能手與氣氛帶動者。" },
+    "ENFP": { name: "伊布 (Eevee)", type: "一般", color: "#aaaa77", desc: "充滿無限可能、樂觀且好奇心爆棚。像伊布一樣，你不受限於單一形態，面對未來擁有極強的適應力與創造力。" },
+    "ENTP": { name: "耿鬼 (Gengar)", type: "幽靈 / 毒", color: "#775599", desc: "聰明、幽默且不按牌理出牌。像耿鬼一樣，你喜歡打破常規，腦袋裡充滿鬼靈精怪的點子，最討厭無聊。" },
+    "ESTJ": { name: "風速狗 (Arcanine)", type: "火", color: "#ff4422", desc: "正義感強、威嚴且具備領導力。像風速狗一樣，你忠誠、有組織能力，總是帶領團隊高效前進。" },
+    "ESFJ": { name: "胖丁 (Jigglypuff)", type: "一般 / 妖精", color: "#ffbba2", desc: "熱情好客、關注他人需求且喜歡照顧大家。像胖丁一樣，你希望每個人都和諧相處，是朋友圈中的核心紐帶。" },
+    "ENFJ": { name: "波克基斯 (Togekiss)", type: "妖精 / 飛行", color: "#ffbba2", desc: "溫暖、鼓舞人心且充滿大愛。像波克基斯一樣，你擅長引導與激勵他人，願意將幸福與正能量散播給全世界。" },
+    "ENTJ": { name: "噴火龍 (Charizard)", type: "火 / 飛行", color: "#ff4422", desc: "天生的領袖、充滿野心與決斷力。像噴火龍一樣，你擁有強大的氣場，不畏艱難，總是帶領大家開疆闢土。" }
+};
+
+let currentQuestionIndex = 0;
+let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+function startQuiz() {
+    document.getElementById('start-view').classList.add('hidden');
+    document.getElementById('quiz-view').classList.remove('hidden');
+    showQuestion();
+}
+
+function showQuestion() {
+    if (currentQuestionIndex < questions.length) {
+        let qData = questions[currentQuestionIndex];
+        document.getElementById('progress').style.width = `${(currentQuestionIndex / questions.length) * 100}%`;
+        document.getElementById('progress-text').innerText = `${currentQuestionIndex}/12`;
+        document.getElementById('question').innerText = qData.q;
+        document.getElementById('optA').innerText = qData.a;
+        document.getElementById('optB').innerText = qData.b;
+    } else {
+        calculateResult();
+    }
+}
+
+function selectOption(choice) {
+    let qData = questions[currentQuestionIndex];
+    if (choice === 'A') {
+        scores[qData.valA]++;
+    } else {
+        scores[qData.valB]++;
+    }
+    currentQuestionIndex++;
+    showQuestion();
+}
+
+function calculateResult() {
+    document.getElementById('quiz-view').classList.add('hidden');
+    document.getElementById('result-view').classList.remove('hidden');
+    
+    let mbti = "";
+    mbti += (scores.E >= scores.I) ? "E" : "I";
+    mbti += (scores.S >= scores.N) ? "S" : "N";
+    mbti += (scores.T >= scores.F) ? "T" : "F";
+    mbti += (scores.J >= scores.P) ? "J" : "P";
+    
+    let result = pokemonDatabase[mbti];
+    
+    /* 🌲 核心修改：直接讀取你本地 images 資料夾中對應小寫 mbti 名字的圖片（例：images/infp.png） */
+    document.getElementById('pokemon-pic').src = `images/${mbti.toLowerCase()}.png`;
+    document.getElementById('pokemon-name').innerText = result.name;
+    
+    let typeBadge = document.getElementById('pokemon-type');
+    typeBadge.innerText = result.type;
+    typeBadge.style.backgroundColor = result.color;
+
+    document.getElementById('mbti-type').innerText = `【 靈魂型態：${mbti} 】`;
+    document.getElementById('pokemon-desc').innerText = result.desc;
+}
+
+function restartQuiz() {
+    currentQuestionIndex = 0;
+    scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+    document.getElementById('result-view').classList.add('hidden');
+    document.getElementById('start-view').classList.remove('hidden');
+}
+</script>
+
+</body>
+</html>

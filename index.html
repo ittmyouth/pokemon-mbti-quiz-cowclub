@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ 寶可夢 16型人格 (MBTI) 終極測驗 ⚡</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --pk-yellow: #ffcb05;
+            --pk-blue: #2a75bb;
+            --pk-dark-blue: #1c3b70;
+            --pk-red: #ee1515;
+            --pk-dark: #111116;
+        }
+        
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'PingFang HK', 'Helvetica Neue', Arial, sans-serif;
+            background-image: url('images/bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 🌐 復古像素網格背景 */
+        .grid-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* 🌌 底部動態極光雲霧 */
+        .aurora {
+            position: fixed;
+            bottom: -50px;
+            left: 0;
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(to top, rgba(42, 117, 187, 0.3), rgba(255, 203, 5, 0.05), transparent);
+            filter: blur(35px);
+            pointer-events: none;
+            z-index: 2;
+            animation: auroraWave 7s ease-in-out infinite alternate;
+        }
+
+        @keyframes auroraWave {
+            0% { transform: translateY(0) scaleY(1); opacity: 0.5; }
+            100% { transform: translateY(-25px) scaleY(1.25); opacity: 0.8; }
+        }
+
+        /* 🏀 右上角巨大旋轉精靈球浮印 */
+        body::after {
+            content: "";
+            position: fixed;
+            top: -120px;
+            right: -120px;
+            width: 500px;
+            height: 500px;
+            border: 35px solid rgba(255, 255, 255, 0.035);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            animation: rotateBgBall 70s linear infinite;
+        }
+
+        @keyframes rotateBgBall {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 💥 畫面超強震動特效 */
+        .screen-shake {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-10px, -2px, 0) rotate(-2deg); }
+            20%, 80% { transform: translate3d(12px, 3px, 0) rotate(3deg); }
+            30%, 50%, 70% { transform: translate3d(-14px, -3px, 0) rotate(-3deg); }
+            40%, 60% { transform: translate3d(14px, 2px, 0) rotate(3deg); }
+        }
+
+        /* ⚡ 全螢幕閃電特效容器 */
+        .lightning-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 998;
+            overflow: hidden;
+        }
+
+        .lightning-bolt {
+            position: absolute;
+            top: -10%;
+            width: 6px;
+            height: 120%;
+            background: #fff;
+            box-shadow: 0 0 20px #fff, 0 0 35px #ffcb05, 0 0 60px #ffea00;
+            opacity: 0;
+            transform: rotate(var(--angle, 15deg));
+            animation: flashLightning 0.4s ease-out forwards;
+        }
+
+        @keyframes flashLightning {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            40% { opacity: 0.2; }
+            60% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* 🌌 背景暗角與微光暈 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: 
+                radial-gradient(circle at 50% 30%, rgba(255, 203, 5, 0.15) 0%, rgba(10, 15, 30, 0.75) 70%),
+                radial-gradient(circle at 10% 10%, rgba(42, 117, 187, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(238, 21, 21, 0.15) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ✨ 動態星光粒子容器 */
+        .stars-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: floatUp var(--duration) infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(105vh) scale(0.3);
+                opacity: 0;
+            }
+            50% { opacity: 0.8; }
+            100% {
+                transform: translateY(-10vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* 🔴 左上標題 🟡 */
+        .top-left-title {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--pk-yellow);
+            text-shadow: 3px 3px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000;
+            letter-spacing: 2px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            user-select: none;
+        }
+
+        .ball-icon {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #000;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+            display: inline-block;
+            flex-shrink: 0;
+            transition: transform 0.2s ease;
+        }
+        .ball-icon::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 50%;
+        }
+
+        .ball-left {
+            background: linear-gradient(180deg, #ee1515 45%, #000 45%, #000 55%, #ffffff 55%);
+        }
+
+        .ball-right {
+            background: linear-gradient(180deg, #333 45%, #000 45%, #000 55%, #ffffff 55%);
+        }
+        .ball-right::before {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 3px;
+            right: 3px;
+            height: 5px;
+            background: var(--pk-yellow);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .top-left-title:hover .ball-left { transform: rotate(-20px) scale(1.15); }
+        .top-left-title:hover .ball-right { transform: rotate(20px) scale(1.15); }
+
+        .sound-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            border: 2px solid var(--pk-yellow);
+            color: var(--pk-yellow);
+            border-radius: 50px;
+            padding: 6px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s;
+        }
+        .sound-toggle:hover { background: var(--pk-yellow); color: #000; }
+
+        /* 📜 左下角條款與細則按鈕 */
+        .bottom-left-terms {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid rgba(255, 203, 5, 0.8);
+            color: var(--pk-yellow);
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s ease-in-out;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .bottom-left-terms:hover {
+            background: var(--pk-yellow);
+            color: #000;
+            text-shadow: none;
+            box-shadow: 0 0 12px rgba(255, 203, 5, 0.6);
+            transform: translateY(-2px);
+        }
+
+        /* 📜 條款 Modal 彈出視窗 */
+        .terms-modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .terms-modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .terms-modal {
+            background: #181c27;
+            border: 3px solid var(--pk-yellow);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 480px;
+            max-height: 80vh;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(255, 203, 5, 0.3);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .terms-modal-overlay.active .terms-modal {
+            transform: scale(1);
+        }
+        .terms-header {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--pk-yellow);
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .terms-close-btn {
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .terms-close-btn:hover { color: #fff; }
+        .terms-content {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #ccc;
+            overflow-y: auto;
+            padding-right: 8px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .terms-content h4 {
+            color: #fff;
+            margin: 12px 0 5px 0;
+        }
+        .terms-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .terms-content::-webkit-scrollbar-thumb {
+            background: var(--pk-yellow);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .top-left-title { font-size: 18px; top: 12px; left: 12px; gap: 8px; }
+            .ball-icon { width: 22px; height: 22px; border-width: 2px; }
+            .ball-icon::after { width: 6px; height: 6px; border-width: 1px; }
+            .sound-toggle { font-size: 12px; top: 12px; right: 12px; }
+            .bottom-left-terms { font-size: 11px; bottom: 12px; left: 12px; padding: 4px 10px; }
+            body { padding-top: 50px; }
+        }
+
+        /* 📦 主內容卡片 */
+        .container {
+            background-color: rgba(18, 22, 32, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 35px 25px;
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+            border: 5px solid #fff;
+            outline: 5px solid #000;
+            box-shadow: 0 0 0 8px rgba(255, 203, 5, 0.8), 0 0 35px rgba(255, 203, 5, 0.3), 0 20px 50px rgba(0,0,0,0.9);
+            position: relative;
+            z-index: 5;
+            overflow: hidden;
+            animation: containerGlow 4s infinite alternate ease-in-out;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -6px; left: -6px; right: -6px; bottom: -6px;
+            background: linear-gradient(45deg, #ff0055, #ffcb05, #00e5ff, #ff0055);
+            background-size: 400%;
+            z-index: -1;
+            filter: blur(18px);
+            opacity: 0.35;
+            border-radius: 25px;
+            animation: glowMove 10s linear infinite;
+        }
+
+        @keyframes glowMove {
+            0% { background-position: 0 0; }
+            50% { background-position: 400% 0; }
+            100% { background-position: 0 0; }
+        }
+
+        @keyframes containerGlow {
+            0% { box-shadow: 0 0 0 8px rgba(255, 203, 5, 0.7), 0 0 25px rgba(255, 203, 5, 0.2), 0 20px 50px rgba(0,0,0,0.9); }
+            100% { box-shadow: 0 0 0 8px rgba(255, 203, 5, 0.9), 0 0 45px rgba(255, 203, 5, 0.5), 0 20px 50px rgba(0,0,0,0.9); }
+        }
+
+        .pokeball-bg {
+            position: absolute;
+            right: -60px;
+            bottom: -60px;
+            width: 220px;
+            height: 220px;
+            border: 20px solid rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .pokeball-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(180deg, #ee1515 45%, #222 45%, #222 55%, #ffffff 55%);
+            border: 5px solid #000;
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            position: relative;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.6);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .pokeball-icon::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border: 4px solid #000;
+            border-radius: 50%;
+            box-shadow: inset -2px -2px 0 rgba(0,0,0,0.2);
+        }
+        .pokeball-icon:hover {
+            transform: scale(1.1) rotate(15deg);
+        }
+
+        h1 { 
+            color: var(--pk-yellow); 
+            font-size: 24px;
+            margin-bottom: 20px; 
+            text-shadow: 3px 3px 0px #000;
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            background: linear-gradient(180deg, #d32f2f 0%, #9a0007 100%);
+            color: #ffffff;
+            border: 3px solid var(--pk-yellow);
+            outline: 2px solid #000;
+            padding: 14px 36px;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+            font-weight: 900;
+            box-shadow: 0 6px 0px #000;
+            display: inline-block;
+            text-shadow: 2px 2px 0px #000;
+            margin: 10px 5px;
+            letter-spacing: 1px;
+        }
+        .btn:hover { 
+            background: linear-gradient(180deg, #f44336 0%, #c62828 100%);
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 0px #000, 0 0 15px rgba(255, 203, 5, 0.5);
+            color: var(--pk-yellow);
+        }
+        .btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0px #000;
+        }
+
+        .btn-sub {
+            background: linear-gradient(180deg, #2a75bb 0%, #1c3b70 100%);
+            color: #ffffff;
+            border: 2px solid #fff;
+            outline: 2px solid #000;
+            padding: 8px 20px;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #000;
+            margin-bottom: 15px;
+            transition: all 0.15s;
+            text-shadow: 1px 1px 0 #000;
+        }
+        .btn-sub:hover { 
+            background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+            color: var(--pk-yellow);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #000;
+        }
+        .btn-sub:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #000;
+        }
+
+        .hidden { display: none; }
+
+        .hp-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #000;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 2px solid #555;
+        }
+        .hp-label {
+            color: #ff4444;
+            font-size: 14px;
+            font-family: 'Press Start 2P', monospace;
+        }
+        .progress-bar {
+            flex-grow: 1;
+            height: 12px;
+            background-color: #333;
+            border-radius: 6px;
+            border: 1px solid #fff;
+            overflow: hidden;
+            padding: 1px;
+        }
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, #51df51, #3fe03f);
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.25s ease-out;
+        }
+
+        .game-box {
+            background-color: #1a1e29;
+            border: 4px solid #fff;
+            outline: 3px solid #000;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+        }
+        .question { 
+            font-size: 18px; 
+            font-weight: bold; 
+            line-height: 1.6; 
+            color: #fff;
+            text-align: left;
+        }
+
+        .options { display: flex; flex-direction: column; gap: 12px; }
+        .option-btn {
+            background-color: #262c3d;
+            border: 3px solid #4a5470;
+            color: #fff;
+            padding: 14px 18px;
+            font-size: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.15s;
+            font-weight: 600;
+            position: relative;
+            padding-left: 35px;
+        }
+        .option-btn::before {
+            content: "▶";
+            position: absolute;
+            left: 12px;
+            color: var(--pk-yellow);
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+        .option-btn:hover { 
+            border-color: var(--pk-yellow); 
+            background-color: #333b52; 
+            transform: translateX(4px); 
+        }
+        .option-btn:hover::before { opacity: 1; }
+
+        .option-btn.selected {
+            border-color: var(--pk-yellow) !important;
+            background-color: #3f4a69 !important;
+            box-shadow: 0 0 10px rgba(255, 203, 5, 0.4);
+        }
+        .option-btn.selected::before { opacity: 1 !important; }
+
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 18px;
+        }
+
+        .btn-nav {
+            flex: 1;
+            background: linear-gradient(180deg, #333d52 0%, #1f2533 100%);
+            color: #fff;
+            border: 2px solid #6b7c96;
+            outline: 2px solid #000;
+            padding: 10px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #000;
+            transition: all 0.15s;
+        }
+        .btn-nav:hover:not(:disabled) {
+            background: linear-gradient(180deg, #4a5875 0%, #2a3347 100%);
+            border-color: var(--pk-yellow);
+            color: var(--pk-yellow);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #000;
+        }
+        .btn-nav:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #000;
+        }
+        .btn-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            border-color: #444;
+            box-shadow: none;
+        }
+
+        .pokemon-img-container {
+            margin: 15px auto 10px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,203,5,0.3) 0%, rgba(0,0,0,0.8) 80%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background-color: #0d0f14;
+            border-radius: 50%;
+            border: 4px solid var(--pk-yellow);
+            box-shadow: 0 0 25px rgba(255, 203, 5, 0.4);
+            overflow: visible;
+        }
+        
+        .pokemon-img {
+            max-width: 85%;
+            max-height: 85%;
+            object-fit: contain;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.7));
+            position: relative;
+            z-index: 2;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* 🌟 升級版：閃光寶可夢黃金光彩特效 🌟 */
+        .shiny-effect {
+            border-color: #ffe600 !important;
+            background: radial-gradient(circle, rgba(255, 230, 0, 0.45) 0%, rgba(20, 15, 0, 0.9) 80%) !important;
+            box-shadow: 0 0 35px #ffe600, 0 0 15px #ffffff, inset 0 0 20px #ffea00 !important;
+            animation: shinyPulse 1.2s infinite alternate ease-in-out;
+        }
+
+        @keyframes shinyPulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 8px #ffea00); }
+            100% { transform: scale(1.03); filter: drop-shadow(0 0 22px #ffffff); }
+        }
+
+        /* 🌟 異色專用：放射狀光芒特效 */
+        .radial-burst {
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            background: repeating-conic-gradient(
+                from 0deg,
+                rgba(255, 230, 109, 0.35) 0deg 10deg,
+                transparent 10deg 20deg
+            );
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0.2) rotate(0deg);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .radial-burst.active {
+            animation: burstAnim 0.8s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+        }
+        @keyframes burstAnim {
+            0% { opacity: 1; transform: scale(0.3) rotate(0deg); }
+            70% { opacity: 0.8; transform: scale(1.3) rotate(45deg); }
+            100% { opacity: 0; transform: scale(1.6) rotate(60deg); }
+        }
+
+        /* 🌟 異色專用：星星飄散粒子 */
+        .sparkle-particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+            background: radial-gradient(circle, #FFF 20%, var(--pk-yellow) 70%, transparent 100%);
+            clip-path: polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);
+            animation: sparkleFly 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        @keyframes sparkleFly {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(0.2) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--dx), var(--dy)) scale(var(--scale)) rotate(180deg);
+            }
+        }
+
+        /* 👑 傳說神獸降臨特效 */
+        .legendary-effect {
+            border-color: #ffd700 !important;
+            box-shadow: 0 0 50px #ffae00, 0 0 20px #ffffff, inset 0 0 30px #ffea00 !important;
+            animation: legendaryPulse 1s infinite alternate;
+        }
+        @keyframes legendaryPulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px #ffae00); }
+            100% { transform: scale(1.05); filter: drop-shadow(0 0 25px #ffffff); }
+        }
+
+        .type-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            font-size: 13px;
+            font-weight: 900;
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            border: 2px solid #fff;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+        }
+
+        .result-title { font-size: 24px; color: var(--pk-yellow); font-weight: 900; margin-bottom: 5px; text-shadow: 2px 2px 0 #000; }
+        .pokemon-mbti { font-size: 16px; color: #ff9d00; font-weight: bold; margin-bottom: 10px;}
+        .pokemon-desc { text-align: left; line-height: 1.7; margin-bottom: 20px; font-size: 14px; background: #141720; padding: 16px; border-radius: 10px; border: 2px solid #333; border-left: 5px solid var(--pk-yellow); color: #ddd; white-space: pre-line;}
+        
+        .flash-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 999;
+        }
+        .do-flash { animation: flashAnim 0.5s ease-out; }
+        @keyframes flashAnim {
+            0% { opacity: 0.8; }
+            100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 🌐 網格、極光與閃電特效容器 -->
+<div class="grid-overlay"></div>
+<div class="aurora"></div>
+<div class="lightning-container" id="lightningContainer"></div>
+<div class="stars-container" id="starsContainer"></div>
+
+<div id="flash" class="flash-overlay"></div>
+<button class="sound-toggle" onclick="toggleSound()">🔊 音效: 開</button>
+
+<div class="top-left-title">
+    <span class="ball-icon ball-left"></span>
+    <span>屯門牛落場</span>
+    <span class="ball-icon ball-right"></span>
+</div>
+
+<!-- 📜 左下角條款按鈕與彈出視窗 -->
+<button class="bottom-left-terms" onclick="toggleTermsModal(true)">📜 條款與細則</button>
+
+<div class="terms-modal-overlay" id="termsModalOverlay">
+    <div class="terms-modal">
+        <div class="terms-header">
+            <span>📜 服務條款與細則</span>
+            <button class="terms-close-btn" onclick="toggleTermsModal(false)">✕</button>
+        </div>
+        <div class="terms-content">
+            <h4>1. 測驗性質說明</h4>
+            <p>本「寶可夢 16型人格測驗」僅供娛樂與性格參考用途，並非專業心理學或醫療診斷工具。</p>
+
+            <h4>2. 智慧財產權聲明</h4>
+            <p>本網頁所使用之寶可夢名稱、圖片、音效及相關商標，其智慧財產權均屬任天堂 (Nintendo)、Game Freak 及 Creatures Inc. 所有。本網站僅為粉絲二次創作，無任何商業營利用途。</p>
+
+            <h4>3. 機率與抽卡說明</h4>
+            <p>測驗結果包含 20% 機率觸發傳說神獸及 25% 機率出現異色（Shiny）版寶可夢，所有機率皆由前端隨機數（Math.random）即時計算產生。</p>
+
+            <h4>4. 個人資料保護</h4>
+            <p>本應用程式完全於使用者瀏覽器本地執行，不會收集、儲存或傳輸任何使用者的個人隱私數據與測驗答案。</p>
+        </div>
+        <button class="btn-sub" style="margin-bottom: 0;" onclick="toggleTermsModal(false)">我已閱讀並同意</button>
+    </div>
+</div>
+
+<div class="container">
+    <div class="pokeball-bg"></div>
+
+    <!-- 開始畫面 -->
+    <div id="start-view">
+        <div class="pokeball-icon" onclick="startQuiz()"></div>
+        <h1>寶可夢 16型人格測驗</h1>
+        <p style="font-size: 15px; margin-bottom: 30px; color: #ccc; line-height: 1.7;">
+            野生的 MBTI 測驗出現了！<br>
+            訓練家，回答 12 道冒險抉擇，召喚你的靈魂寶可夢！
+        </p>
+        <button class="btn" onclick="startQuiz()">開啟冒險 ➔</button>
+    </div>
+
+    <!-- 測驗進行中 -->
+    <div id="quiz-view" class="hidden">
+        <div class="hp-container">
+            <span class="hp-label">HP</span>
+            <div class="progress-bar"><div id="progress" class="progress"></div></div>
+            <span id="progress-text" style="font-size: 12px; color: #aaa; font-family: monospace;">LV.1/12</span>
+        </div>
+        <div class="game-box">
+            <div id="question" class="question">野生的問題出現了...</div>
+        </div>
+        <div class="options">
+            <button class="option-btn" id="optA" onclick="selectOption('A')">選項 A</button>
+            <button class="option-btn" id="optB" onclick="selectOption('B')">選項 B</button>
+        </div>
+
+        <!-- ⬅ 上一題 / 下一題 ➔ 控制按鈕區 -->
+        <div class="nav-controls">
+            <button class="btn-nav" id="prevBtn" onclick="prevQuestion()" disabled>⬅ 上一題</button>
+            <button class="btn-nav" id="nextBtn" onclick="nextQuestion()">下一題 ➔</button>
+        </div>
+    </div>
+
+    <!-- 結果畫面 -->
+    <div id="result-view" class="hidden">
+        <h1 id="result-header" style="color: var(--pk-yellow); font-size: 20px; margin-bottom: 10px;">🔴 圖鑑登錄成功！</h1>
+        
+        <div id="img-box" class="pokemon-img-container">
+            <div id="burst" class="radial-burst"></div>
+            <img id="pokemon-pic" class="pokemon-img" src="" alt="寶可夢圖片">
+        </div>
+
+        <div>
+            <button class="btn-sub" onclick="playCurrentCry()">🔊 聽寶可夢叫聲</button>
+        </div>
+
+        <div id="pokemon-type" class="type-badge" style="background-color: #aaa;">屬性</div>
+        <div class="result-title" id="pokemon-name">寶可夢名稱</div>
+        <div class="pokemon-mbti" id="mbti-type">MBTI 類型</div>
+        <div class="pokemon-desc" id="pokemon-desc">寶可夢描述</div>
+        <button class="btn" onclick="restartQuiz()">再次挑戰 ↻</button>
+    </div>
+</div>
+
+<script>
+function createParticles() {
+    const container = document.getElementById('starsContainer');
+    const particleCount = 25;
+    for (let i = 0; i < particleCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 4 + 2;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.setProperty('--duration', `${Math.random() * 8 + 6}s`);
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        if (Math.random() > 0.6) {
+            star.style.background = '#ffcb05';
+            star.style.boxShadow = '0 0 6px #ffcb05';
+        } else {
+            star.style.boxShadow = '0 0 6px #ffffff';
+        }
+        container.appendChild(star);
+    }
+}
+createParticles();
+
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let soundEnabled = true;
+let currentCryUrl = "";
+
+function playSound(type) {
+    if (!soundEnabled) return;
+
+    if (type === 'click') {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.08);
+    } else if (type === 'shiny') {
+        const freqs = [1318.51, 1661.22, 1975.53, 2637.02];
+        const now = audioCtx.currentTime;
+        freqs.forEach((freq, index) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, now + index * 0.05);
+
+            gain.gain.setValueAtTime(0.01, now + index * 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.2, now + index * 0.05 + 0.02);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + index * 0.05 + 0.4);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + index * 0.05);
+            osc.stop(now + index * 0.05 + 0.45);
+        });
+    }
+}
+
+function toggleTermsModal(show) {
+    playSound('click');
+    const overlay = document.getElementById('termsModalOverlay');
+    if (show) {
+        overlay.classList.add('active');
+    } else {
+        overlay.classList.remove('active');
+    }
+}
+
+function spawnSparkles(count) {
+    const container = document.getElementById('img-box');
+    const rect = container.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    for (let i = 0; i < count; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle-particle';
+
+        const size = Math.random() * 16 + 12;
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 80 + 50;
+
+        const dx = `${Math.cos(angle) * distance}px`;
+        const dy = `${Math.sin(angle) * distance}px`;
+        const scale = (Math.random() * 0.6 + 0.6).toFixed(2);
+
+        sparkle.style.width = `${size}px`;
+        sparkle.style.height = `${size}px`;
+        sparkle.style.left = `${centerX - size / 2}px`;
+        sparkle.style.top = `${centerY - size / 2}px`;
+
+        sparkle.style.setProperty('--dx', dx);
+        sparkle.style.setProperty('--dy', dy);
+        sparkle.style.setProperty('--scale', scale);
+
+        container.appendChild(sparkle);
+
+        setTimeout(() => sparkle.remove(), 800);
+    }
+}
+
+function playCurrentCry() {
+    if (!soundEnabled || !currentCryUrl) return;
+    const cryAudio = new Audio(currentCryUrl);
+    cryAudio.volume = 0.6;
+    cryAudio.play().catch(e => console.log("Audio playback prevented:", e));
+}
+
+function toggleSound() {
+    soundEnabled = !soundEnabled;
+    document.querySelector('.sound-toggle').innerText = soundEnabled ? "🔊 音效: 開" : "🔇 音效: 關";
+}
+
+function triggerFlash() {
+    const flash = document.getElementById('flash');
+    flash.classList.remove('do-flash');
+    void flash.offsetWidth;
+    flash.classList.add('do-flash');
+}
+
+function triggerLegendaryEffects() {
+    document.body.classList.remove('screen-shake');
+    void document.body.offsetWidth; 
+    document.body.classList.add('screen-shake');
+    
+    const container = document.getElementById('lightningContainer');
+    container.innerHTML = ''; 
+    
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            const bolt = document.createElement('div');
+            bolt.className = 'lightning-bolt';
+            bolt.style.left = `${Math.random() * 80 + 10}%`; 
+            bolt.style.setProperty('--angle', `${(Math.random() - 0.5) * 40}deg`); 
+            container.appendChild(bolt);
+            
+            setTimeout(() => bolt.remove(), 500);
+        }, i * 80); 
+    }
+}
+
+const questions = [
+    { q: "在派對或聚會結束後，你通常會覺得？", a: "獲得滿滿能量，想繼續和朋友續攤", b: "電量耗盡，需要獨立空間好好充電", type: "EI", valA: "E", valB: "I" },
+    { q: "難得放假時，你更傾向於哪種放鬆方式？", a: "約朋友出門逛街、聚餐或參加活動", b: "待在家裡看劇、打電動或享受獨處", type: "EI", valA: "E", valB: "I" },
+    { q: "在團隊進行討論時，你的習慣是？", a: "邊講邊整理想法，積極發表意見", b: "先聆聽大家的看法，思考成熟後再發言", type: "EI", valA: "E", valB: "I" },
+    
+    { q: "學習新知識或技能時，你比較偏好？", a: "明確的步驟指引、具體範例與實作", b: "理解背後的大框架、原理與未來的可能性", type: "SN", valA: "S", valB: "N" },
+    { q: "當朋友向你訴苦時，你第一時間會注意到？", a: "事情發生的具體經過與事實細節", b: "對方的隱含情緒與這件事對他的長期影響", type: "SN", valA: "S", valB: "N" },
+    { q: "你如何看待生活中的常規與規律？", a: "喜歡明確、踏實且有條理的日常規律", b: "容易對重複感到無聊，喜歡尋求創新點子", type: "SN", valA: "S", valB: "N" },
+    
+    { q: "當朋友面臨抉擇尋求幫助時，你會先？", a: "客觀分析局勢，幫忙尋找最有效的解決方案", b: "優先照顧對方的感受，給予情緒支持與同理", type: "TF", valA: "T", valB: "F" },
+    { q: "做重大決定時，哪項因素對你影響更大？", a: "邏輯推理與數據事實是否客觀合理", b: "個人價值觀與該決定對他人的感受影響", type: "TF", valA: "T", valB: "F" },
+    { q: "你比較容易被以下哪種讚賞打動？", a: "「你處理這件事真的非常聰明且有效率！」", b: "「你真的非常貼心且溫暖，有你真好！」", type: "TF", valA: "T", valB: "F" },
+    
+    { q: "準備踏上冒險（旅遊）前，你通常會？", a: "提前規劃好詳細行程與交通路線", b: "只決定大方向，隨心所欲地探索驚喜", type: "JP", valA: "J", valB: "P" },
+    { q: "面對有截止日期的任務或作業時，你習慣？", a: "按部就班分階段完成，提早做完", b: "等待靈感爆發，在最後關頭衝刺完成", type: "JP", valA: "J", valB: "P" },
+    { q: "如果突發狀況打亂了預定計畫，你會？", a: "感到些許焦慮，想盡快建立新計劃", b: "覺得無所謂，隨機應變也是一種樂趣", type: "JP", valA: "J", valB: "P" }
+];
+
+const pokemonDatabase = {
+    "ISTJ": { name: "鋼鎧鴉 (Corviknight)", type: "鋼 / 飛行", color: "#8d90a5", desc: "沉穩、可靠且紀律嚴明。像鋼鎧鴉一樣，你是最值得信賴的守護者，做事務實且恪守職責。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/823.ogg" },
+    "ISFJ": { name: "吉利蛋 (Chansey)", type: "一般", color: "#b5b590", desc: "溫柔、貼心且充滿奉獻精神。像吉利蛋一樣，你默默照顧著身邊的每一個人，是天生的療癒者。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/113.ogg" },
+    "INFJ": { name: "超夢 (Mewtwo)", type: "超能力", color: "#f85888", desc: "深邃、神秘且充滿洞察力。像超夢一樣，你擁有極高的精神世界，追求生命與存在的深層意義。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/150.ogg" },
+    "INTJ": { name: "巨金怪 (Metagross)", type: "鋼 / 超能力", color: "#5080a8", desc: "冷靜、理智且具備強大的戰略思維。像巨金怪一樣，你擁有如超級電腦般的頭腦，凡事皆有完美佈局。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/376.ogg" },
+    "ISTP": { name: "甲賀忍蛙 (Greninja)", type: "水 / 惡", color: "#6890f0", desc: "冷酷、靈活且行動力極強。像甲賀忍蛙一樣，你平時低調，但在關鍵時刻總能靠高超的技術解決問題。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/658.ogg" },
+    "ISFP": { name: "圖圖犬 (Smeargle)", type: "一般", color: "#a8a878", desc: "藝術家性格，熱愛自由且感性。像圖圖犬一樣，你用自己獨特的色彩描繪世界，不喜歡被規則束縛。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/235.ogg" },
+    "INFP": { name: "夢幻 (Mew)", type: "超能力", color: "#f85888", desc: "純真、善良且富有想像力。像夢幻一樣，你內心深處保留著童真，總是抱持著理想主義去期待美好的世界。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/151.ogg" },
+    "INTP": { name: "胡地 (Alakazam)", type: "超能力", color: "#f85888", desc: "好奇心重、熱愛思考與邏輯分析。像胡地一樣，你的大腦永遠在運轉，試圖解開世界上所有的未知謎團。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/65.ogg" },
+    "ESTP": { name: "炙焰咆哮虎 (Incineroar)", type: "火 / 惡", color: "#f08030", desc: "充滿活力、喜歡挑戰且熱愛活在當下。像炙焰咆哮虎一樣，你是全場焦點，享受冒險與刺激的感官體驗。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/727.ogg" },
+    "ESFP": { name: "皮卡丘 (Pikachu)", type: "電", color: "#f8d030", desc: "熱情、活潑且自帶光芒。像皮卡丘一樣，你走到哪裡都能帶來歡樂，是天生的社交小能手與氣氛帶動者。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/25.ogg" },
+    "ENFP": { name: "伊布 (Eevee)", type: "一般", color: "#a8a878", desc: "充滿無限可能、樂觀且好奇心爆棚。像伊布一樣，你不受限於單一形態，面對未來擁有極強的適應力與創造力。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/133.ogg" },
+    "ENTP": { name: "耿鬼 (Gengar)", type: "幽靈 / 毒", color: "#705898", desc: "聰明、幽默且不按牌理出牌。像耿鬼一樣，你喜歡打破常規，腦袋裡充滿鬼靈精怪的點子，最討厭無聊。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/94.ogg" },
+    "ESTJ": { name: "風速狗 (Arcanine)", type: "火", color: "#f08030", desc: "正義感強、威嚴且具備領導力。像風速狗一樣，你忠誠、有組織能力，總是帶領團隊高效前進。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/59.ogg" },
+    "ESFJ": { name: "胖丁 (Jigglypuff)", type: "一般 / 妖精", color: "#ee99ac", desc: "熱情好客、關注他人需求且喜歡照顧大家。像胖丁一樣，你希望每個人都和諧相處，是朋友圈中的核心紐帶。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/39.ogg" },
+    "ENFJ": { name: "波克基斯 (Togekiss)", type: "妖精 / 飛行", color: "#ee99ac", desc: "溫暖、鼓舞人心且充滿大愛。像波克基斯一樣，你擅長引導與激勵他人，願意將幸福與正能量散播給全世界。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/468.ogg" },
+    "ENTJ": { name: "噴火龍 (Charizard)", type: "火 / 飛行", color: "#f08030", desc: "天生的領袖、充滿野心與決斷力。像噴火龍一樣，你擁有強大的氣場，不畏艱難，總是帶領大家開疆闢土。", cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/6.ogg" }
+};
+
+const legendaryList = [
+    {
+        id: "arceus",
+        name: "阿爾宙斯 (Arceus)",
+        type: "一般 (全屬性)",
+        color: "#e0a96d",
+        desc: "【 👑 超稀有！創世神降臨 】\n萬物之源，創造宇宙的創世神。你的靈魂擁有無限的維度與潛能，超越了常規 16 型人格的界限！",
+        cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/493.ogg"
+    },
+    {
+        id: "rayquaza",
+        name: "烈空坐 (Rayquaza)",
+        type: "龍 / 飛行",
+        color: "#2e8b57",
+        desc: "【 👑 超稀有！天空霸主降臨 】\n棲息於臭氧層的天空王者。你擁有壓倒性的氣場與遠大的格局，習慣站在高處俯瞰全局，平息紛爭！",
+        cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/384.ogg"
+    },
+    {
+        id: "dialga",
+        name: "帝牙盧卡 (Dialga)",
+        type: "鋼 / 龍",
+        color: "#4682b4",
+        desc: "【 👑 超稀有！時間之神降臨 】\n掌控時間流動的傳說寶可夢。你的思考超越當下，具備極強的前瞻性與沉穩性格，能完美掌控屬於自己的節奏！",
+        cry: "https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/483.ogg"
+    }
+];
+
+let currentQuestionIndex = 0;
+let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+let userAnswers = [];
+
+function startQuiz() {
+    playSound('click');
+    triggerFlash();
+    document.getElementById('start-view').classList.add('hidden');
+    document.getElementById('quiz-view').classList.remove('hidden');
+    showQuestion();
+}
+
+function showQuestion() {
+    if (currentQuestionIndex < questions.length) {
+        let qData = questions[currentQuestionIndex];
+        document.getElementById('progress').style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+        document.getElementById('progress-text').innerText = `LV.${currentQuestionIndex + 1}/12`;
+        document.getElementById('question').innerText = qData.q;
+        
+        const optA = document.getElementById('optA');
+        const optB = document.getElementById('optB');
+        
+        optA.innerText = qData.a;
+        optB.innerText = qData.b;
+
+        optA.classList.remove('selected');
+        optB.classList.remove('selected');
+
+        if (userAnswers[currentQuestionIndex] === 'A') {
+            optA.classList.add('selected');
+        } else if (userAnswers[currentQuestionIndex] === 'B') {
+            optB.classList.add('selected');
+        }
+
+        document.getElementById('prevBtn').disabled = (currentQuestionIndex === 0);
+    } else {
+        calculateResult();
+    }
+}
+
+function selectOption(choice) {
+    playSound('click');
+    let qData = questions[currentQuestionIndex];
+    
+    if (userAnswers[currentQuestionIndex]) {
+        let oldChoice = userAnswers[currentQuestionIndex];
+        let oldVal = (oldChoice === 'A') ? qData.valA : qData.valB;
+        scores[oldVal]--;
+    }
+
+    userAnswers[currentQuestionIndex] = choice;
+    let newVal = (choice === 'A') ? qData.valA : qData.valB;
+    scores[newVal]++;
+
+    currentQuestionIndex++;
+    showQuestion();
+}
+
+function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+        playSound('click');
+        currentQuestionIndex--;
+        showQuestion();
+    }
+}
+
+function nextQuestion() {
+    if (!userAnswers[currentQuestionIndex]) {
+        alert("請先選擇一個選項再繼續喔！");
+        return;
+    }
+    playSound('click');
+    currentQuestionIndex++;
+    showQuestion();
+}
+
+function calculateResult() {
+    triggerFlash();
+    
+    document.getElementById('quiz-view').classList.add('hidden');
+    document.getElementById('result-view').classList.remove('hidden');
+    
+    let isLegendary = Math.random() < 0.20;
+    
+    let mbti = "";
+    mbti += (scores.E >= scores.I) ? "E" : "I";
+    mbti += (scores.S >= scores.N) ? "S" : "N";
+    mbti += (scores.T >= scores.F) ? "T" : "F";
+    mbti += (scores.J >= scores.P) ? "J" : "P";
+    
+    let imgBox = document.getElementById('img-box');
+    let resHeader = document.getElementById('result-header');
+    let typeBadge = document.getElementById('pokemon-type');
+    let burst = document.getElementById('burst');
+
+    imgBox.classList.remove('shiny-effect', 'legendary-effect');
+    burst.classList.remove('active');
+
+    if (isLegendary) {
+        let legendary = legendaryList[Math.floor(Math.random() * legendaryList.length)];
+        
+        currentCryUrl = legendary.cry;
+        document.getElementById('pokemon-pic').src = `images/${legendary.id}.png`; 
+        document.getElementById('pokemon-name').innerText = legendary.name;
+        typeBadge.innerText = legendary.type;
+        typeBadge.style.backgroundColor = legendary.color;
+        
+        imgBox.classList.add('legendary-effect');
+        resHeader.innerText = "👑 驚天動地！傳說神獸降臨！";
+        document.getElementById('mbti-type').innerText = `【 🌟 隱藏型態：傳說降臨 (${mbti}) 】`;
+        document.getElementById('pokemon-desc').innerText = legendary.desc;
+
+        triggerLegendaryEffects();
+
+    } else {
+        let result = pokemonDatabase[mbti];
+        currentCryUrl = result.cry;
+
+        document.getElementById('pokemon-name').innerText = result.name;
+        typeBadge.innerText = result.type;
+        typeBadge.style.backgroundColor = result.color;
+
+        let isShiny = Math.random() < 0.25;
+        
+        if (isShiny) {
+            document.getElementById('pokemon-pic').src = `images/${mbti.toLowerCase()}-shiny.png`;
+            imgBox.classList.add('shiny-effect');
+            resHeader.innerText = "✨ 遭遇異色閃光寶可夢！";
+            document.getElementById('mbti-type').innerText = `【 🌟 異色閃光型態：${mbti} 】`;
+            
+            playSound('shiny');
+            burst.classList.remove('active');
+            void burst.offsetWidth;
+            burst.classList.add('active');
+            spawnSparkles(12);
+        } else {
+            document.getElementById('pokemon-pic').src = `images/${mbti.toLowerCase()}.png`;
+            resHeader.innerText = "🔴 圖鑑登錄成功！";
+            document.getElementById('mbti-type').innerText = `【 屬性契合度：${mbti} 】`;
+        }
+
+        document.getElementById('pokemon-desc').innerText = result.desc;
+    }
+
+    setTimeout(() => {
+        playCurrentCry();
+    }, 400);
+}
+
+function restartQuiz() {
+    playSound('click');
+    currentQuestionIndex = 0;
+    scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+    userAnswers = [];
+    document.getElementById('result-view').classList.add('hidden');
+    document.getElementById('start-view').classList.remove('hidden');
+}
+</script>
+
+</body>
+</html>
